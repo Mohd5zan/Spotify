@@ -1,14 +1,13 @@
 const albumModel = require("../models/album.model");
 const musicModel = require("../models/music.model");
 const { uploadFile } = require("../services/storage.services");
-const jwt = require("jsonwebtoken");
 
 async function createMusic(req, res) {
   const { title } = req.body;
   const file = req.file;
   const result = await uploadFile(file.buffer.toString("base64"));
   const music = await musicModel.create({
-    uri: result.uri,
+    uri: result.url,
     title,
     artist: req.user.id,
   });
@@ -24,11 +23,11 @@ async function createMusic(req, res) {
 }
 
 async function createAlbum(req, res) {
-  const { title, musics } = req.body;
+  const { title, musics } = req.body;// share musics through array
   const album = await albumModel.create({
     title,
-    artist: decoded.id,
-    music: musics,
+    artist: req.user.id,
+    musics: musics,
   });
   res.status(201).json({
     message: "Album created successfully",
@@ -44,7 +43,7 @@ async function createAlbum(req, res) {
 async function getAllMusics(req, res) {
   const musics = await musicModel
     .find()
-    .skip(2)
+    .skip(0)
     .limit(20)
     .populate("artist", "username email");
   res.status(200).json({

@@ -2,13 +2,13 @@ const { ImageKit } = require("@imagekit/nodejs");
 const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 });
-async function uploadFile(file){
-    const result=await ImageKit.files.upload({
-        file,
-        fileName:"Music_"+Date.now(),
-        folder:"Spotify/music"
-    })
-    return result;
+async function uploadFile(file) {
+  const result = await imagekit.files.upload({
+    file,
+    fileName: "Music_" + Date.now(),
+    folder: "Spotify/music",
+  });
+  return result;
 }
 
-module.exports={uploadFile};
+module.exports = { uploadFile };
